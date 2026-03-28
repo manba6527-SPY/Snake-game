@@ -221,73 +221,6 @@ export default function SnakeGame() {
     }
   }, [gameState, moveSnake, speed, isGenerating])
 
-  // 触摸控制
-  useEffect(() => {
-    let touchStartX = 0
-    let touchStartY = 0
-    let touchEndX = 0
-    let touchEndY = 0
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (gameState !== 'playing' || isGenerating) return
-      touchStartX = e.touches[0].clientX
-      touchStartY = e.touches[0].clientY
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (gameState !== 'playing' || isGenerating) return
-      touchEndX = e.changedTouches[0].clientX
-      touchEndY = e.changedTouches[0].clientY
-      handleSwipe()
-    }
-
-    const handleSwipe = () => {
-      const diffX = touchEndX - touchStartX
-      const diffY = touchEndY - touchStartY
-
-      // 确定主要滑动方向
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        // 水平滑动
-        if (Math.abs(diffX) > 30) { // 最小滑动距离
-          const newDirection = diffX > 0 ? 'RIGHT' : 'LEFT'
-          const opposites: Record<Direction, Direction> = {
-            UP: 'DOWN', DOWN: 'UP', LEFT: 'RIGHT', RIGHT: 'LEFT'
-          }
-          if (opposites[newDirection] !== directionRef.current) {
-            setDirection(newDirection)
-            directionRef.current = newDirection
-          }
-        }
-      } else {
-        // 垂直滑动
-        if (Math.abs(diffY) > 30) { // 最小滑动距离
-          const newDirection = diffY > 0 ? 'DOWN' : 'UP'
-          const opposites: Record<Direction, Direction> = {
-            UP: 'DOWN', DOWN: 'UP', LEFT: 'RIGHT', RIGHT: 'LEFT'
-          }
-          if (opposites[newDirection] !== directionRef.current) {
-            setDirection(newDirection)
-            directionRef.current = newDirection
-          }
-        }
-      }
-    }
-
-    // 为画布添加触摸事件
-    const canvas = canvasRef.current
-    if (canvas) {
-      canvas.addEventListener('touchstart', handleTouchStart, { passive: true })
-      canvas.addEventListener('touchend', handleTouchEnd, { passive: true })
-    }
-
-    return () => {
-      if (canvas) {
-        canvas.removeEventListener('touchstart', handleTouchStart)
-        canvas.removeEventListener('touchend', handleTouchEnd)
-      }
-    }
-  }, [gameState, isGenerating])
-
   // 键盘控制
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -534,7 +467,7 @@ export default function SnakeGame() {
                     </Button>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-1">方向键/WASD移动 · 空格暂停 · 手机滑动控制</p>
+                <p className="text-xs text-slate-500 mt-1">方向键/WASD移动 · 空格暂停</p>
               </CardContent>
             </Card>
 
